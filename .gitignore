@@ -1,0 +1,7 @@
+node_modules/
+*.log
+
+# 本地生成的目录缓存（构建脚本产物，不入库）
+data/*.tmp.json
+.DS_Store
+Thumbs.db

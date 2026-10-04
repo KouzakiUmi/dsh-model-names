@@ -1,0 +1,8 @@
+# dsh-model-names —— 自我挂载（只 insert 本插件一行）
+#
+# 这里**不写**任何 provider / 模型配置：路由、凭据、模型集合与请求参数完全由
+# profile / home 的 cordis.patch.yml 决定。显示名在运行时由 lib/index.js 按
+# data/model-names.json（全量数据库）覆盖 ctx.llm 目录读取结果的展示字段。
+- insert:
+    - id: model-names
+      name: dsh-model-names
