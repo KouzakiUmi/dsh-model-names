@@ -5,3 +5,7 @@ node_modules/
 data/*.tmp.json
 .DS_Store
 Thumbs.db
+# release pipeline artifacts
+dist/
+*.tgz
+pack.json
