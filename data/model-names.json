@@ -238,12 +238,13 @@
         "gpt-6-luna": "GPT-6 Luna",
         "gpt-6-sol": "GPT-6 Sol",
         "gpt-realtime-2.1": "GPT-Realtime-2.1",
-        "o1": "o1",
-        "o1-pro": "o1-pro",
-        "o3": "o3",
-        "o3-mini": "o3-mini",
-        "o3-pro": "o3-pro",
-        "o4-mini": "o4-mini"
+        "o1": "Azure o1",
+        "o1-pro": "Azure o1-pro",
+        "o3": "Azure o3",
+        "o3-mini": "Azure o3-mini",
+        "o3-pro": "Azure o3-pro",
+        "o4-mini": "Azure o4-mini",
+        "deepseek-v4-pro": "DeepSeek V4 Pro"
       }
     },
     "baseten": {
@@ -253,6 +254,7 @@
         "deepseek-ai/DeepSeek-V4-Pro": "DeepSeek V4 Pro",
         "deepseek-ai/DeepSeek-V4-Pro-0813": "DeepSeek V4 Pro 0813",
         "deepseek-ai/DeepSeek-V4.1-Flash": "DeepSeek V4.1 Flash",
+        "deepseek-ai/DeepSeek-V4.1-Flash-Fast": "Baseten DeepSeek-V4.1-Flash-Fast",
         "moonshotai/Kimi-K2.5": "Kimi K2.5",
         "moonshotai/Kimi-K2.6": "Kimi K2.6",
         "moonshotai/Kimi-K2.7-Code": "Kimi K2.7 Code",
@@ -330,9 +332,11 @@
         "gpt-5.6-sol": "GPT-5.6 Sol",
         "gpt-5.6-terra": "GPT-5.6 Terra",
         "gpt-6-astra": "GPT-6 Astra",
-        "o3": "o3",
-        "o3-mini": "o3-mini",
-        "o4-mini": "o4-mini"
+        "gpt-6-luna": "GPT-6 Luna",
+        "gpt-6-sol": "GPT-6 Sol",
+        "o3": "Cloudflare AI Gateway o3",
+        "o3-mini": "Cloudflare AI Gateway o3-mini",
+        "o4-mini": "Cloudflare AI Gateway o4-mini"
       }
     },
     "cloudflare-workers-ai": {
@@ -615,17 +619,17 @@
     "minimax": {
       "displayName": "MiniMax",
       "models": {
-        "MiniMax-M2.7": "MiniMax-M2.7",
+        "MiniMax-M2.7": "MiniMax MiniMax-M2.7",
         "MiniMax-M2.7-highspeed": "MiniMax M2.7 Highspeed",
-        "MiniMax-M3": "MiniMax-M3"
+        "MiniMax-M3": "MiniMax MiniMax-M3"
       }
     },
     "minimax-cn": {
       "displayName": "MiniMax CN",
       "models": {
-        "MiniMax-M2.7": "MiniMax-M2.7",
+        "MiniMax-M2.7": "MiniMax CN MiniMax-M2.7",
         "MiniMax-M2.7-highspeed": "MiniMax M2.7 Highspeed",
-        "MiniMax-M3": "MiniMax-M3"
+        "MiniMax-M3": "MiniMax CN MiniMax-M3"
       }
     },
     "mistral": {
@@ -746,12 +750,12 @@
         "gpt-6-luna": "GPT-6 Luna",
         "gpt-6-sol": "GPT-6 Sol",
         "gpt-realtime-2.1": "GPT-Realtime-2.1",
-        "o1": "o1",
-        "o1-pro": "o1-pro",
-        "o3": "o3",
-        "o3-mini": "o3-mini",
-        "o3-pro": "o3-pro",
-        "o4-mini": "o4-mini"
+        "o1": "OpenAI o1",
+        "o1-pro": "OpenAI o1-pro",
+        "o3": "OpenAI o3",
+        "o3-mini": "OpenAI o3-mini",
+        "o3-pro": "OpenAI o3-pro",
+        "o4-mini": "OpenAI o4-mini"
       }
     },
     "openai-codex": {
@@ -1289,6 +1293,7 @@
         "kimi-k2.5": "Kimi K2.5",
         "kimi-k2.6": "Kimi K2.6",
         "kimi-k2.7-code": "Kimi K2.7 Code",
+        "MiniMax-M2.5": "Qwen Token Plan MiniMax-M2.5",
         "qwen3.6-flash": "Qwen3.6 Flash",
         "qwen3.6-plus": "Qwen3.6 Plus",
         "qwen3.7-max": "Qwen3.7 Max",
@@ -1314,6 +1319,7 @@
         "kimi-k2.5": "Kimi K2.5",
         "kimi-k2.6": "Kimi K2.6",
         "kimi-k2.7-code": "Kimi K2.7 Code",
+        "MiniMax-M2.5": "Qwen Token Plan CN MiniMax-M2.5",
         "qwen3.6-flash": "Qwen3.6 Flash",
         "qwen3.6-plus": "Qwen3.6 Plus",
         "qwen3.7-max": "Qwen3.7 Max",
