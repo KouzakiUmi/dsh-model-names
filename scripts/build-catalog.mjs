@@ -243,7 +243,10 @@ async function main() {
     const raw = JSON.parse(readFileSync(join(dataDir, file), "utf8"));
     const models = {};
     for (const group of Object.values(raw)) {
-      for (const [id, model] of Object.entries(group)) {
+      for (const [catalogKey, model] of Object.entries(group)) {
+        // Newer pi-ai catalogs namespace group keys with the API, e.g. `chat:<id>`;
+        // the runtime registry exposes model.id without that prefix.
+        const id = typeof model?.id === "string" && model.id.length > 0 ? model.id : catalogKey;
         if (id in models) continue;
         const exception = EXCEPTIONS[provider]?.[id];
         const catalogName = typeof model?.name === "string" && model.name.length > 0 ? model.name : undefined;
