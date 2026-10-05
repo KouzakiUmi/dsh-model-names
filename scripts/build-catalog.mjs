@@ -39,6 +39,9 @@ const EXCEPTIONS = {
     "kimi-for-coding": "Kimi K2.7",
     "kimi-for-coding-highspeed": "Kimi K2.7 HighSpeed",
   },
+  baseten: {
+    "deepseek-ai/DeepSeek-V4.1-Flash-Fast": "DeepSeek V4.1 Flash Fast",
+  },
   minimax: {
     "MiniMax-M2.7-highspeed": "MiniMax M2.7 Highspeed",
   },
