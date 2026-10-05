@@ -42,14 +42,16 @@ const files = pkg.files || [];
 if (!files.includes('cordis.patch.yml')) fail('files 缺少 cordis.patch.yml');
 else ok('files = ' + files.join(', '));
 
-for (const [key, target] of Object.entries(pkg.exports || {})) {
-  if (typeof target !== 'string') continue;
-  if (target.includes('*')) {
-    if (!existsSync(join(root, dirname(target)))) fail(`exports["${key}"] -> ${target} 目录不存在`);
-    continue;
+function checkExportTarget(key, target) {
+  if (typeof target === 'string') {
+    if (target.includes('*')) {
+      if (!existsSync(join(root, dirname(target)))) fail(`exports["${key}"] -> ${target} 目录不存在`);
+    } else if (!existsSync(join(root, target))) fail(`exports["${key}"] -> ${target} 文件不存在`);
+  } else if (target && typeof target === 'object') {
+    for (const nested of Object.values(target)) checkExportTarget(key, nested);
   }
-  if (!existsSync(join(root, target))) fail(`exports["${key}"] -> ${target} 文件不存在`);
 }
+for (const [key, target] of Object.entries(pkg.exports || {})) checkExportTarget(key, target);
 ok('exports 目标均存在');
 
 const patchPath = join(root, dsh.bundle.patch || 'cordis.patch.yml');
