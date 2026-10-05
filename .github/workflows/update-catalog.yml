@@ -1,0 +1,84 @@
+name: Update provider/model catalog
+
+on:
+  schedule:
+    - cron: "13 2 * * 1"
+  workflow_dispatch:
+    inputs:
+      pi_ai_version:
+        description: "Optional exact @earendil-works/pi-ai version; blank uses the latest published version"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-provider-model-catalog
+  cancel-in-progress: false
+
+jobs:
+  update-catalog:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Resolve upstream version
+        id: upstream
+        env:
+          REQUESTED_VERSION: ${{ inputs.pi_ai_version }}
+        run: |
+          set -euo pipefail
+          if [ -n "$REQUESTED_VERSION" ]; then
+            version="$(npm view "@earendil-works/pi-ai@$REQUESTED_VERSION" version)"
+          else
+            version="$(npm view @earendil-works/pi-ai version)"
+          fi
+          node -e 'if (!/^\d+\.\d+\.\d+(?:-[\w.]+)?$/.test(process.argv[1])) process.exit(1)' "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Using @earendil-works/pi-ai@$version"
+
+      - name: Download upstream package
+        env:
+          PI_AI_VERSION: ${{ steps.upstream.outputs.version }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/pi-ai-tarball" "$RUNNER_TEMP/pi-ai-package"
+          npm pack "@earendil-works/pi-ai@$PI_AI_VERSION" --pack-destination "$RUNNER_TEMP/pi-ai-tarball"
+          tar -xzf "$RUNNER_TEMP/pi-ai-tarball/earendil-works-pi-ai-$PI_AI_VERSION.tgz" -C "$RUNNER_TEMP/pi-ai-package"
+          node -e 'const p=require(process.argv[1]); if (p.version !== process.env.PI_AI_VERSION) throw new Error("Upstream package version mismatch")' "$RUNNER_TEMP/pi-ai-package/package/package.json"
+
+      - name: Build catalog and name new entries
+        env:
+          MODEL_API_URL: ${{ vars.MODEL_API_URL }}
+          MODEL_API_MODEL: ${{ vars.MODEL_API_MODEL }}
+          MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
+        run: node scripts/build-catalog.mjs --pi-ai "$RUNNER_TEMP/pi-ai-package/package" --enrich
+
+      - name: Validate generated package
+        run: |
+          set -euo pipefail
+          node --check scripts/build-catalog.mjs
+          node scripts/check-manifest.mjs
+          npm pack --ignore-scripts --json > pack.json
+          node scripts/prepare-release.mjs pack.json "$RUNNER_TEMP/release-package"
+
+      - name: Open catalog update pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/update-provider-model-catalog
+          delete-branch: true
+          commit-message: "chore: update provider/model name catalog"
+          title: "chore: update provider/model name catalog"
+          body: |
+            Automated catalog refresh from `@earendil-works/pi-ai@${{ steps.upstream.outputs.version }}`.
+
+            New or ID-style display names were proposed through the configured OpenAI-compatible model API. Please review those names and the generated data diff before merging.

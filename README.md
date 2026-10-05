@@ -35,12 +35,33 @@ DeepSeek 两条路由的 provider 显示名更是硬编码、config schema 里�
   若它不走 `ctx.llm.listModels`，这里覆盖不到）。
 - 只改展示字符串：搜索、选择、提交仍按 `id` 进行。
 
-## 改字与重建
+## 自动同步上游目录
 
-1. 改 `scripts/build-catalog.mjs` 里的 `PROVIDER_DISPLAY_NAMES` / `EXCEPTIONS`
-   （新增可读名），或直接改 `data/model-names.json`。
-2. `node scripts/build-catalog.mjs`（`--check` 只比较不写）。
-3. 重启 DSH NEXT（Host 插件代码/数据变更不热加载）。
+`.github/workflows/update-catalog.yml` 每周一 02:13 UTC 检查 npm 上最新的
+`@earendil-works/pi-ai`，也可以在 Actions 页面手动运行并指定精确版本。工作流下载
+该版本的包，读取其中的 provider / model 目录；对于新增且上游缺名或名称仍等于 ID 的条目，调用
+配置的 OpenAI-compatible Chat Completions API 生成候选名。已有人工命名会在上游仍缺名
+或名称仍为 ID 时保留。数据库记录上游 `sourceVersion`，便于追踪来源。
+
+工作流只创建 `automation/update-provider-model-catalog` 分支和 PR，不会直接更新主分支或
+发布 Release。除添加下面的变量和 Secret 外，还需在仓库 **Settings → Actions → General**
+允许 GitHub Actions 创建 Pull Request（组织策略也不能禁用此权限）。
+
+| 名称 | 类型 | 内容 |
+|---|---|---|
+| `MODEL_API_URL` | Variable | 完整 Chat Completions URL，例如 `https://api.example/v1/chat/completions` |
+| `MODEL_API_MODEL` | Variable | 服务商支持的模型 ID |
+| `MODEL_API_KEY` | Secret | 模型 API 密钥 |
+
+API 响应需符合 OpenAI-compatible 格式，并在 `choices[0].message.content` 中返回 JSON：
+`{"items":[{"key":"provider:example","name":"Example Provider"}]}`。工作流会拒绝缺失、重复、额外或仍等于 ID 的结果；API 失败时不会创建更新 PR。
+如果某次上游更新没有未命名条目，构建不需要模型 API；首次运行会处理数据库里仍等于 ID 的条目，因此应先配置好这三个值。
+
+## 手动改字与本地重建
+
+1. 在 `scripts/build-catalog.mjs` 维护 `PROVIDER_DISPLAY_NAMES` / `EXCEPTIONS`，避免直接编辑自动生成的数据文件。
+2. `node scripts/build-catalog.mjs --pi-ai <pi-ai 包目录>` 重建本地数据库；`--enrich` 会调用上面的 API 环境变量为未命名条目生成候选名，`--check` 比较并在过期时以非零状态退出。
+3. 审核生成结果，再提交；插件数据库变更后重启 DSH NEXT（Host 插件代码/数据变更不热加载）。
 
 ## 安装
 
