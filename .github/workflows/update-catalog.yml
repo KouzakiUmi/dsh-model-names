@@ -74,6 +74,7 @@ jobs:
       - name: Open catalog update pull request
         uses: peter-evans/create-pull-request@v7
         with:
+          base: main
           branch: automation/update-provider-model-catalog
           delete-branch: true
           commit-message: "chore: update provider/model name catalog"
