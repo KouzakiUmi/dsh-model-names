@@ -68,10 +68,27 @@ jobs:
           name: release-package
           path: dist
 
+      - name: Generate release notes without contributor announcements
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          gh api --method POST "repos/$GITHUB_REPOSITORY/releases/generate-notes" \
+            -f tag_name="$RELEASE_TAG" --jq .body > dist/release-notes.md
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          const path = 'dist/release-notes.md';
+          const notes = readFileSync(path, 'utf8').replace(
+            /(?:^|\n)## New Contributors\r?\n[\s\S]*?(?=\n## |\n\*\*Full Changelog\*\*:|$)/u,
+            '',
+          );
+          writeFileSync(path, notes.trim() + '\n');
+          NODE
+
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: dist/dsh-model-names.tgz
           fail_on_unmatched_files: true
-          generate_release_notes: true
+          body_path: dist/release-notes.md
           prerelease: ${{ contains(github.ref_name, '-') }}
