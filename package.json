@@ -1,7 +1,7 @@
 {
   "name": "dsh-model-names",
   "displayName": "Provider / 模型显示名",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "内置 provider / 模型显示名的全量数据库：载入时按环境里实际启用的 provider 与模型覆盖显示名，只影响 UI，不改路由、请求与凭据。",
   "type": "module",
   "main": "lib/index.js",

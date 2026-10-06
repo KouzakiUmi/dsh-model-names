@@ -34,6 +34,11 @@ const PROVIDER_DISPLAY_NAMES = {
 
 /** 逐模型可读名（provider -> modelId -> name）。 */
 const EXCEPTIONS = {
+  // Canonical short names can equal runtime IDs; keep these out of API enrichment.
+  ...Object.fromEntries(["azure", "cloudflare-ai-gateway", "openai"].map((provider) => [
+    provider,
+    Object.fromEntries(["o1", "o1-pro", "o3", "o3-mini", "o3-pro", "o4-mini"].map((id) => [id, `OpenAI ${id}`])),
+  ])),
   // Human-verified aliases whose public model family cannot be derived from the ID.
   "kimi-coding": {
     "kimi-for-coding": "Kimi K2.7",
@@ -43,15 +48,21 @@ const EXCEPTIONS = {
     "deepseek-ai/DeepSeek-V4.1-Flash-Fast": "DeepSeek V4.1 Flash Fast",
   },
   minimax: {
+    "MiniMax-M2.7": "MiniMax M2.7",
+    "MiniMax-M3": "MiniMax M3",
     "MiniMax-M2.7-highspeed": "MiniMax M2.7 Highspeed",
   },
   "minimax-cn": {
+    "MiniMax-M2.7": "MiniMax M2.7",
+    "MiniMax-M3": "MiniMax M3",
     "MiniMax-M2.7-highspeed": "MiniMax M2.7 Highspeed",
   },
   "opencode-go": {
     "hy4-preview": "Hy4 Preview",
     "longcat-2.0": "LongCat 2.0",
   },
+  "qwen-token-plan-cn": { "MiniMax-M2.5": "MiniMax M2.5" },
+  "qwen-token-plan": { "MiniMax-M2.5": "MiniMax M2.5" },
   opencode: {
     "hy4-preview": "Hy4 Preview",
     "longcat-2.0": "LongCat 2.0",

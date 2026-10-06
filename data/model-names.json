@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "pi-ai builtin catalog + DSH builtin routes",
-  "sourceVersion": "1.0.3",
+  "sourceVersion": "1.0.4",
   "providers": {
     "amazon-bedrock": {
       "displayName": "Amazon Bedrock",
@@ -263,12 +263,12 @@
         "gpt-daybreak-blue-latest": "Daybreak Blue",
         "gpt-daybreak-red-latest": "Daybreak Red",
         "gpt-realtime-2.1": "GPT-Realtime-2.1",
-        "o1": "o1",
-        "o1-pro": "o1-pro",
-        "o3": "o3",
-        "o3-mini": "o3-mini",
-        "o3-pro": "o3-pro",
-        "o4-mini": "o4-mini",
+        "o1": "OpenAI o1",
+        "o1-pro": "OpenAI o1-pro",
+        "o3": "OpenAI o3",
+        "o3-mini": "OpenAI o3-mini",
+        "o3-pro": "OpenAI o3-pro",
+        "o4-mini": "OpenAI o4-mini",
         "deepseek-v4-pro": "DeepSeek V4 Pro"
       }
     },
@@ -360,9 +360,9 @@
         "gpt-6-astra": "GPT-6 Astra",
         "gpt-6-luna": "GPT-6 Luna",
         "gpt-6-sol": "GPT-6 Sol",
-        "o3": "o3",
-        "o3-mini": "o3-mini",
-        "o4-mini": "o4-mini"
+        "o3": "OpenAI o3",
+        "o3-mini": "OpenAI o3-mini",
+        "o4-mini": "OpenAI o4-mini"
       }
     },
     "cloudflare-workers-ai": {
@@ -639,17 +639,17 @@
     "minimax": {
       "displayName": "MiniMax",
       "models": {
-        "MiniMax-M2.7": "MiniMax-M2.7",
+        "MiniMax-M2.7": "MiniMax M2.7",
         "MiniMax-M2.7-highspeed": "MiniMax M2.7 Highspeed",
-        "MiniMax-M3": "MiniMax-M3"
+        "MiniMax-M3": "MiniMax M3"
       }
     },
     "minimax-cn": {
       "displayName": "MiniMax CN",
       "models": {
-        "MiniMax-M2.7": "MiniMax-M2.7",
+        "MiniMax-M2.7": "MiniMax M2.7",
         "MiniMax-M2.7-highspeed": "MiniMax M2.7 Highspeed",
-        "MiniMax-M3": "MiniMax-M3"
+        "MiniMax-M3": "MiniMax M3"
       }
     },
     "mistral": {
@@ -774,12 +774,12 @@
         "gpt-daybreak-blue-latest": "Daybreak Blue",
         "gpt-daybreak-red-latest": "Daybreak Red",
         "gpt-realtime-2.1": "GPT-Realtime-2.1",
-        "o1": "o1",
-        "o1-pro": "o1-pro",
-        "o3": "o3",
-        "o3-mini": "o3-mini",
-        "o3-pro": "o3-pro",
-        "o4-mini": "o4-mini"
+        "o1": "OpenAI o1",
+        "o1-pro": "OpenAI o1-pro",
+        "o3": "OpenAI o3",
+        "o3-mini": "OpenAI o3-mini",
+        "o3-pro": "OpenAI o3-pro",
+        "o4-mini": "OpenAI o4-mini"
       }
     },
     "openai-codex": {
@@ -1262,7 +1262,6 @@
         "qwen/qwen3.7-plus": "Qwen: Qwen3.7 Plus",
         "qwen/qwen3.8-2.4t-a95b": "Qwen: Qwen3.8 2.4T A95B",
         "qwen/qwen3.8-27b": "Qwen: Qwen3.8 27B",
-        "qwen/qwen3.8-27b:free": "Qwen: Qwen3.8 27B (free)",
         "qwen/qwen3.8-flash": "Qwen: Qwen3.8 Flash",
         "qwen/qwen3.8-max-0902": "Qwen: Qwen3.8 Max (0902)",
         "qwen/qwen3.8-max-prime": "Qwen: Qwen3.8 Max Prime",
@@ -1274,7 +1273,6 @@
         "sakana/fugu-ultra-v2": "Sakana: Fugu Ultra v2",
         "sakana/sakana-namazu": "Sakana: Sakana Namazu",
         "sao10k/l3.1-euryale-70b": "Sao10K: Llama 3.1 Euryale 70B v2.2",
-        "stealth/space-bunny-alpha": "Space Bunny Alpha",
         "stepfun/step-3.5-flash": "StepFun: Step 3.5 Flash",
         "stepfun/step-3.7-flash": "StepFun: Step 3.7 Flash",
         "tencent/hy3": "Tencent: Hy3",
@@ -1374,6 +1372,7 @@
         "sourceful/riverflow-v2-pro": "Sourceful: Riverflow V2 Pro",
         "sourceful/riverflow-v2.5-fast": "Sourceful: Riverflow V2.5 Fast",
         "sourceful/riverflow-v2.5-pro": "Sourceful: Riverflow V2.5 Pro",
+        "tencent/hy-image-v3.5-preview": "Tencent: Hy Image 3.5 Preview",
         "x-ai/grok-imagine-image-2.0": "xAI: Grok Imagine Image 2.0",
         "x-ai/grok-imagine-image-quality": "SpaceXAI: Grok Imagine Image Quality",
         "~typesafe/jev-latest": "TypeSafe: Jev Latest",
@@ -1407,7 +1406,7 @@
         "kimi-k2.5": "Kimi K2.5",
         "kimi-k2.6": "Kimi K2.6",
         "kimi-k2.7-code": "Kimi K2.7 Code",
-        "MiniMax-M2.5": "MiniMax-M2.5",
+        "MiniMax-M2.5": "MiniMax M2.5",
         "qwen3.6-flash": "Qwen3.6 Flash",
         "qwen3.6-plus": "Qwen3.6 Plus",
         "qwen3.7-max": "Qwen3.7 Max",
@@ -1432,7 +1431,7 @@
         "kimi-k2.5": "Kimi K2.5",
         "kimi-k2.6": "Kimi K2.6",
         "kimi-k2.7-code": "Kimi K2.7 Code",
-        "MiniMax-M2.5": "MiniMax-M2.5",
+        "MiniMax-M2.5": "MiniMax M2.5",
         "qwen3.6-flash": "Qwen3.6 Flash",
         "qwen3.6-plus": "Qwen3.6 Plus",
         "qwen3.7-max": "Qwen3.7 Max",
