@@ -4,9 +4,9 @@
 
 ## 它是什么
 
-- `data/model-names.json`：**全量命名数据库**。构建自宿主内置的 pi-ai 目录
-  （`scripts/build-catalog.mjs`：41 个 provider / 约 1500 个模型的 `id → 可读名`，
-  外加 provider 显示名）。
+- `data/model-names.json`：**全量命名数据库**。由 `scripts/build-catalog.mjs` 从宿主内置的
+  pi-ai provider / model 目录生成，并合并 DSH 自带路由；`sourceVersion` 记录上游目录版本。
+  数据为模型 ID 与可读显示名的映射，随上游目录自动更新，不在文档中固定数量。
 - `lib/index.js`：载入时包装 `ctx.llm` 的目录读取方法，**按当前环境里实际存在的**
   provider 与模型做映射：
 
