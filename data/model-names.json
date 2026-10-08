@@ -622,8 +622,8 @@
       "models": {
         "k3": "Kimi K3",
         "k3-256k": "Kimi K3-256K",
-        "kimi-for-coding": "Kimi K2.7",
-        "kimi-for-coding-highspeed": "Kimi K2.7 HighSpeed"
+        "kimi-for-coding": "Kimi K2.8 Preview",
+        "kimi-for-coding-highspeed": "Kimi K2.7 Code HighSpeed"
       }
     },
     "meta": {

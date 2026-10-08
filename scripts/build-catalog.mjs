@@ -40,9 +40,11 @@ const EXCEPTIONS = {
     Object.fromEntries(["o1", "o1-pro", "o3", "o3-mini", "o3-pro", "o4-mini"].map((id) => [id, `OpenAI ${id}`])),
   ])),
   // Human-verified aliases whose public model family cannot be derived from the ID.
+  // Verified 2026-10-08: https://www.kimi.com/code/docs/kimi-code/models.html
+  // These rolling aliases must be reviewed when Kimi updates their model versions.
   "kimi-coding": {
-    "kimi-for-coding": "Kimi K2.7",
-    "kimi-for-coding-highspeed": "Kimi K2.7 HighSpeed",
+    "kimi-for-coding": "Kimi K2.8 Preview",
+    "kimi-for-coding-highspeed": "Kimi K2.7 Code HighSpeed",
   },
   baseten: {
     "deepseek-ai/DeepSeek-V4.1-Flash-Fast": "DeepSeek V4.1 Flash Fast",
