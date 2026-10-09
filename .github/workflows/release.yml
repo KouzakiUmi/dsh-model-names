@@ -92,3 +92,25 @@ jobs:
           fail_on_unmatched_files: true
           body_path: dist/release-notes.md
           prerelease: ${{ contains(github.ref_name, '-') }}
+
+  npm:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: release-package
+          path: dist
+
+      - name: Publish verified package through npm Trusted Publisher
+        run: npm publish ./dist/dsh-model-names.tgz --access public
