@@ -65,6 +65,15 @@ API 响应需符合 OpenAI-compatible 格式，并在 `choices[0].message.conten
 
 ## 安装
 
+从 npm 安装：
+
+```sh
+dsh plugin --profile <profile> add dsh-model-names
+```
+
+版本标签触发的发布 CI 会校验并构建安装包，同时发布到 GitHub Release 和 npm。
+npm 发布通过 Trusted Publisher 使用 GitHub Actions OIDC，不保存长期发布 Token。
+
 ```
 dsh plugin add <插件目录绝对路径>
 ```
