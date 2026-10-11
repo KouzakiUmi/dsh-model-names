@@ -95,6 +95,7 @@ jobs:
 
   npm:
     needs: verify
+    environment: npm
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
