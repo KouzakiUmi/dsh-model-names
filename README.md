@@ -7,6 +7,8 @@
 - `data/model-names.json`：**全量命名数据库**。由 `scripts/build-catalog.mjs` 从宿主内置的
   pi-ai provider / model 目录生成，并合并 DSH 自带路由；`sourceVersion` 记录上游目录版本。
   数据为模型 ID 与可读显示名的映射，随上游目录自动更新，不在文档中固定数量。
+  数据库只增不减：上游目录移除的模型仍会保留旧名字，这样宿主随包的 pi-ai 目录落后于
+  npm 最新版（或回退到旧版）时，环境里实际存在的模型依然有可读名；`sourceVersion` 记录覆盖到的最高上游版本。
 - `lib/index.js`：载入时包装 `ctx.llm` 的目录读取方法，**按当前环境里实际存在的**
   provider 与模型做映射：
 
@@ -20,6 +22,16 @@
   路由 id、凭据、模型集合、请求与会话记录都不受影响。
 
 - `cordis.patch.yml`：只 `insert` 本插件自己一行，不写任何 provider / 模型配置。
+
+## 兼容基准
+
+兼容性以宿主 **DSH Core** 暴露的 `llm` 服务契约为准（`listProviders()`、`listConfigurableProviders()`、
+`listModels(provider)`；宿主按属性名动态调用这些方法，因此实例级覆盖有效），而不是 CLI、
+桌面壳或 npm 管理器的版本。已对照 Core `0.2.1-rc.2` 的 `llm` 服务实现核对，并在宿主随包的 Cordis 4.0.5 上验证加载、改名与卸载恢复。
+插件卸载时只摘除仍处于最外层的自己的包装；若有其他插件叠加了更外层的包装，则自身退化为透传，
+不会撕掉别人的包装。
+
+数据库对 provider / 模型 id 只取自有键，`constructor`、`__proto__` 之类的 id 不会命中原型上的值。
 
 ## 为什么不在 patch 里改名
 
@@ -60,8 +72,12 @@ API 响应需符合 OpenAI-compatible 格式，并在 `choices[0].message.conten
 ## 手动改字与本地重建
 
 1. 在 `scripts/build-catalog.mjs` 维护 `PROVIDER_DISPLAY_NAMES` / `EXCEPTIONS`，避免直接编辑自动生成的数据文件。
-2. `node scripts/build-catalog.mjs --pi-ai <pi-ai 包目录>` 重建本地数据库；`--enrich` 会调用上面的 API 环境变量为未命名条目生成候选名，`--check` 比较并在过期时以非零状态退出。
-3. 审核生成结果，再提交；插件数据库变更后重启 DSH NEXT（Host 插件代码/数据变更不热加载）。
+2. `node scripts/build-catalog.mjs --pi-ai <pi-ai 包目录>` 重建本地数据库。DSH NEXT 把 pi-ai 打包在
+   `resources/app.asar` 内，普通 Node 读不了；需先把 `node_modules/@earendil-works/pi-ai` 下的
+   `package.json` 与 `dist/providers` 导出到一个目录再传给 `--pi-ai`，以便按**宿主实际使用的**目录版本校验覆盖。
+   `--enrich` 会调用上面的 API 环境变量为未命名条目生成候选名，`--check` 比较并在过期时以非零状态退出。
+3. `npm test` 运行单元测试，`npm run check` 做发布前清单校验。
+4. 审核生成结果，再提交；插件数据库变更后重启 DSH NEXT（Host 插件代码/数据变更不热加载）。
 
 ## 安装
 

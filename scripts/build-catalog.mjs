@@ -102,6 +102,21 @@ const DSH_BUILTIN_PROVIDERS = {
   },
 };
 
+/** 比较 semver 主干（忽略预发布后缀）；返回较新的一个，缺失或无法解析的一方让位。 */
+function newerVersion(a, b) {
+  const parse = (value) => {
+    const match = typeof value === "string" ? /^(\d+)\.(\d+)\.(\d+)/u.exec(value) : null;
+    return match ? match.slice(1, 4).map(Number) : undefined;
+  };
+  const left = parse(a);
+  const right = parse(b);
+  if (!left) return right ? b : (a ?? "unknown");
+  if (!right) return a;
+  for (let i = 0; i < 3; i += 1) if (left[i] !== right[i]) return left[i] > right[i] ? a : b;
+  // 主干相同：正式版比预发布新。
+  return String(a).includes("-") && !String(b).includes("-") ? b : a;
+}
+
 function parseArgs(argv) {
   const out = { check: false, enrich: false, piAi: undefined };
   for (let i = 0; i < argv.length; i += 1) {
@@ -119,7 +134,11 @@ function findPiAiRoot(explicit) {
     join(process.env.ProgramFiles ?? "C:/Program Files", "DSH NEXT", "resources", "app", "node_modules", "@earendil-works", "pi-ai"),
   ].filter(Boolean);
   for (const candidate of candidates) if (existsSync(join(candidate, "dist", "providers", "data"))) return candidate;
-  throw new Error("pi-ai package not found; pass --pi-ai <package dir>");
+  throw new Error(
+    "pi-ai package not found; pass --pi-ai <package dir>. "
+    + "DSH NEXT ships pi-ai inside resources/app.asar, which plain Node cannot read: "
+    + "export node_modules/@earendil-works/pi-ai/{package.json,dist/providers} to a directory first.",
+  );
 }
 
 function providerName(piAiRoot, provider) {
@@ -248,13 +267,20 @@ async function main() {
   const providers = {};
   const pendingNames = [];
   let previousCatalog = {};
+  let previousSourceVersion;
   try {
-    previousCatalog = JSON.parse(readFileSync(OUT, "utf8"))?.providers ?? {};
+    const previous = JSON.parse(readFileSync(OUT, "utf8"));
+    previousCatalog = previous?.providers ?? {};
+    previousSourceVersion = previous?.sourceVersion;
   } catch (_ignored) {}
   const upstreamPackagePath = join(piAiRoot, "package.json");
-  const sourceVersion = existsSync(upstreamPackagePath)
+  const upstreamVersion = existsSync(upstreamPackagePath)
     ? JSON.parse(readFileSync(upstreamPackagePath, "utf8")).version
     : "unknown";
+  // 目录只增不减：保留了上一份数据库里上游已不再提供的条目，所以宿主仍在使用旧版 pi-ai
+  // 目录时（DSH 随包 pi-ai 往往落后于 npm 最新版）这些模型照样有可读名。
+  // sourceVersion 记录数据库覆盖到的最高上游版本。
+  const sourceVersion = newerVersion(upstreamVersion, previousSourceVersion);
 
   for (const file of readdirSync(dataDir)) {
     if (!file.endsWith(".json") || file.startsWith(".")) continue;
@@ -309,6 +335,19 @@ async function main() {
     };
     if (displayName === provider && !PROVIDER_DISPLAY_NAMES[provider] && !isReadableCandidate(preservedDisplayName, provider)) {
       pendingNames.push({ key: `provider:${provider}`, kind: "provider", provider, id: provider, sourceName: displayName });
+    }
+  }
+
+  for (const [provider, previous] of Object.entries(previousCatalog)) {
+    if (previous === null || typeof previous !== "object" || Array.isArray(previous)) continue;
+    const previousModels = previous.models !== null && typeof previous.models === "object" && !Array.isArray(previous.models) ? previous.models : {};
+    if (!Object.hasOwn(providers, provider)) {
+      const label = typeof previous.displayName === "string" && previous.displayName.length > 0 ? previous.displayName : provider;
+      providers[provider] = { displayName: label, models: {} };
+    }
+    const entry = providers[provider];
+    for (const [id, name] of Object.entries(previousModels)) {
+      if (typeof name === "string" && name.length > 0 && !Object.hasOwn(entry.models, id)) entry.models[id] = name;
     }
   }
 
